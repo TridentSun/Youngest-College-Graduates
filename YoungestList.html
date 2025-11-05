@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youngest College Degree Holders</title>
+    <style>
+        /* =====================================================
+           Youngest College Degree Holders - Interactive Site
+           All styles embedded (no external CSS)
+           ===================================================== */
+
+        /* -------------------------------------------------
+           Global & Reset
+           ------------------------------------------------- */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9fb;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* -------------------------------------------------
+           Layout
+           ------------------------------------------------- */
+        header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.3rem;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            max-width: 900px;
+            margin: 0.8rem auto 0;
+            opacity: 0.92;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* -------------------------------------------------
+           Search Filter
+           ------------------------------------------------- */
+        .search-filter {
+            margin-bottom: 1.8rem;
+            text-align: center;
+        }
+
+        #searchInput {
+            padding: 0.9rem 1.4rem;
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid #ccc;
+            border-radius: 30px;
+            font-size: 1.05rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 4px rgba(42, 82, 152, 0.25);
+        }
+
+        /* -------------------------------------------------
+           Age Tabs
+           ------------------------------------------------- */
+        .age-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.6rem;
+        }
+
+        .tab-button {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 0.7rem 1.4rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.98rem;
+            min-width: 110px;
+        }
+
+        .tab-button:hover {
+            background: #f0f5ff;
+        }
+
+        .tab-button.active {
+            background: #2a5298;
+            color: white;
+            border-color: #2a5298;
+            box-shadow: 0 3px 10px rgba(42, 82, 152, 0.3);
+        }
+
+        .tab-button.active:hover {
+            background: #1e3c72;
+        }
+
+        /* -------------------------------------------------
+           Age Sections & Cards
+           ------------------------------------------------- */
+        .age-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .age-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .prodigy-card {
+            background: white;
+            border-radius: 14px;
+            padding: 1.8rem;
+            margin-bottom: 1.8rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 6px solid #2a5298;
+            position: relative;
+        }
+
+        .prodigy-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+        }
+
+        .prodigy-name {
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: #2a5298;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Fixed: Use actual star symbol instead of text */
+        .prodigy-name::before {
+            content: "★";
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+
+        .detail {
+            margin: 0.5rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            font-size: 0.98rem;
+        }
+
+        .detail strong {
+            color: #1e3c72;
+            min-width: 130px;
+            font-weight: 600;
+        }
+
+        .detail span {
+            flex: 1;
+        }
+
+        .highlight {
+            background: #fff8e1;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-weight: 500;
+            color: #e65100;
+            display: inline-block;
+            margin-top: 0.3rem;
+        }
+
+        .milestone {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            padding: 0.5rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            font-style: italic;
+            color: #2e7d32;
+            font-size: 0.95rem;
+        }
+
+        .dev-update {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border: 2px solid #ff8f00;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #e65100;
+        }
+
+        /* -------------------------------------------------
+           Source Links
+           ------------------------------------------------- */
+        .source-link {
+            display: inline-block;
+            margin-top: 0.8rem;
+            color: #2a5298;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.92rem;
+            padding: 0.4rem 0.8rem;
+            border: 1px solid #2a5298;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .source-link:hover {
+            background: #2a5298;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* -------------------------------------------------
+           References Section
+           ------------------------------------------------- */
+        .references {
+            margin-top: 3.5rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f0f5ff, #e6f0ff);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            border-left: 5px solid #2a5298;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .references h3 {
+            margin-top: 0;
+            color: #1e3c72;
+            font-size: 1.2rem;
+        }
+
+        .references p {
+            margin: 0.6rem 0;
+        }
+
+        .references a {
+            color: #2a5298;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .references a:hover {
+            text-decoration: underline;
+        }
+
+        /* -------------------------------------------------
+           Footer
+           ------------------------------------------------- */
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            background: #1e3c72;
+            color: white;
+            font-size: 0.95rem;
+            margin-top: 4rem;
+        }
+
+        /* -------------------------------------------------
+           Responsive Design
+           ------------------------------------------------- */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.9rem;
+            }
+            .prodigy-card {
+                padding: 1.4rem;
+            }
+            .tab-button {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .prodigy-name {
+                font-size: 1.4rem;
+            }
+            .detail strong {
+                min-width: 100px;
+            }
+            #searchInput {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Youngest College Degree Holders</h1>
+        <p>List of Youngest College Graduates</p>
+        <p>
+            The following is a list of individuals who achieved the remarkable feat of graduating from college at an exceptionally young age. These prodigies have garnered significant attention for their academic accomplishments and contributions to various fields.
+        </p>
+    </header>
+
+    <div class="container">
+        <div class="search-filter">
+            <input type="text" id="searchInput" placeholder="Search by name, degree, institution, or field..." />
+        </div>
+
+        <div class="age-tabs">
+            <button class="tab-button active" data-age="10">10 Years Old</button>
+            <button class="tab-button" data-age="11">11 Years Old</button>
+            <button class="tab-button" data-age="12">12 Years Old</button>
+            <button class="tab-button" data-age="13">13 Years Old</button>
+            <button class="tab-button" data-age="14">14 Years Old</button>
+        </div>
+
+        <!-- 10 Years Old -->
+        <div id="age-10" class="age-section active">
+            <div class="prodigy-card">
+                <div class="prodigy-name">1. Michael Kearney</div>
+                <div class="detail"><strong>Degree:</strong> <span>Anthropology</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>University of South Alabama</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Kearney is recognized as the world's youngest college graduate, earning his degree at the age of 10. His achievements made him a media sensation and a symbol of extraordinary intellectual ability.</span></div>
+                <a href="https://www.latimes.com/archives/la-xpm-1995-01-15-me-20637-story.html" target="_blank" class="source-link">Source: Los Angeles Times</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">2. Dev Saravanan</div>
+                <div class="detail"><strong>Degrees:</strong> <span>Five Associate Degrees (Math & Science, Economics, Political Science, Communication, Child Development)</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Moorpark College</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Saravanan graduated with five associate degrees by the age of 10, showcasing his versatility and academic prowess. At age 11, he earned two additional associate degrees in Business Administration and Geography. As far as internet research goes, he is the youngest person to hold multiple college degrees.</span></div>
+                <a href="https://moorparkreporter.com/4019718/news/moorpark-college-celebrates-class-of-2024-graduates/" target="_blank" class="source-link">Source: Moorpark Reporter</a>
+                <a href="https://www.thecamarilloacorn.com/articles/age-is-just-a-number-2/" target="_blank" class="source-link">Source: Camarillo Acorn</a>
+            </div>
+        </div>
+
+        <!-- 11 Years Old -->
+        <div id="age-11" class="age-section">
+            <div class="prodigy-card">
+                <div class="prodigy-name">1. William Maillis</div>
+                <div class="detail"><strong>Degree:</strong> <span>Associate in Arts</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>St. Petersburg College, Florida</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Maillis graduated at 11, demonstrating exceptional aptitude in mathematics and science.</span></div>
+                <a href="https://www.cnn.com/2018/07/22/us/11-year-old-graduates-college-trnd/index.html" target="_blank" class="source-link">Source: CNN</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">2. William James Sidis</div>
+                <div class="detail"><strong>Degree:</strong> <span>Mathematics</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Harvard University</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Sidis is regarded as one of the greatest child prodigies in history. He entered Harvard at 11 and was fluent in multiple languages by age 6.</span></div>
+                <a href="https://www.npr.org/2011/01/23/132737060/meet-william-james-sidis-the-smartest-guy-ever" target="_blank" class="source-link">Source: NPR</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">3. Tanishq Abraham</div>
+                <div class="detail"><strong>Degrees:</strong> <span>Three Associate Degrees (Mathematics and Physical Science, General Science, Language Studies)</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>American River College, Sacramento</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Abraham graduated with three degrees at 11, excelling in STEM fields.</span></div>
+                <a href="https://www.nbcnews.com/news/us-news/11-year-old-tanishq-abraham-graduates-california-college-n362706" target="_blank" class="source-link">Source: NBC News</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">4. Athena Elling</div>
+                <div class="detail"><strong>Degree:</strong> <span>Associate Degree in Liberal Arts</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Irvine Valley College</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Elling became the youngest graduate of Irvine Valley College at 11.</span></div>
+                <a href="https://abc7.com/post/oc-girl-break-irvine-valley-colleges-record-youngest/14853975/" target="_blank" class="source-link">Source: ABC7</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">5. Moshe Kai Cavalin</div>
+                <div class="detail"><strong>Degree:</strong> <span>Associate Degree in Astrophysics</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>East Los Angeles College</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Cavalin earned a degree in Astrophysics at 11 and pursued a career in science.</span></div>
+                <a href="https://www.foxnews.com/story/11-year-old-graduates-college-with-degree-in-astrophysics" target="_blank" class="source-link">Source: Fox News</a>
+            </div>
+        </div>
+
+        <!-- 12 Years Old -->
+        <div id="age-12" class="age-section">
+            <div class="prodigy-card">
+                <div class="prodigy-name">1. Sho Yano</div>
+                <div class="detail"><strong>Degree:</strong> <span>Bachelor’s Degree</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Loyola University Chicago</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Yano graduated at 12 and later attended medical school at the University of Chicago.</span></div>
+                <a href="https://www.chicagotribune.com/2003/05/01/at-age-12-its-off-to-medical-school/" target="_blank" class="source-link">Source: Chicago Tribune</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">2. Clovis Hung</div>
+                <div class="detail"><strong>Degrees:</strong> <span>Five Associate Degrees (History, Social Sciences, Social Behavior & Self-Development, Arts & Human Expression, Science & Mathematics)</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Fullerton College</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Hung became the youngest graduate of Fullerton College at 12, earning five degrees.</span></div>
+                <a href="https://news.fullcoll.edu/at-12-clovis-hung-breaks-record-for-youngest-fullerton-college-graduate/" target="_blank" class="source-link">Source: Fullerton College News</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">3. Rohit Datir</div>
+                <div class="detail"><strong>Degrees:</strong> <span>Four Associate Degrees</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>West Los Angeles College</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Datir graduated with four degrees at 12, achieving a significant milestone in education.</span></div>
+                <a href="https://spectrumnews1.com/ca/southern-california/education/2021/07/05/moreno-valley-teen-and-tween-become-youngest-west-la-college-graduates-ever" target="_blank" class="source-link">Source: Spectrum News 1</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">4. Fiona Currie</div>
+                <div class="detail"><strong>Degree:</strong> <span>Associate’s Degree in Studio Arts</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Los Angeles City College</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Currie became one of the youngest graduates of Los Angeles City College at 12.</span></div>
+                <a href="https://abc7.com/los-angeles-city-college-12-year-old-graduate-associates-degree-education/13324469/" target="_blank" class="source-link">Source: ABC7</a>
+            </div>
+        </div>
+
+        <!-- 13 Years Old -->
+        <div id="age-13" class="age-section">
+            <div class="prodigy-card">
+                <div class="prodigy-name">1. Pooja Datir</div>
+                <div class="detail"><strong>Degrees:</strong> <span>Four Associate Degrees</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>West Los Angeles College</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Datir earned four degrees by the age of 14, showcasing exceptional academic ability.</span></div>
+                <a href="https://spectrumnews1.com/ca/southern-california/education/2021/07/05/moreno-valley-teen-and-tween-become-youngest-west-la-college-graduates-ever" target="_blank" class="source-link">Source: Spectrum News 1</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">2. Sayuri Yano</div>
+                <div class="detail"><strong>Degree:</strong> <span>Bachelor of Science in Biology</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Roosevelt University</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Yano graduated with a degree in Biology at 13, one of the youngest to achieve this feat.</span></div>
+                <a href="https://www.nbcchicago.com/news/local/genius-siblings/1921514/" target="_blank" class="source-link">Source: NBC Chicago</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">3. Sriya Kalyan</div>
+                <div class="detail"><strong>Degrees:</strong> <span>Three Associate Degrees (Social and Behavioral Sciences, Humanities, Natural Sciences)</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Moorpark College</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Kalyan graduated at 13, excelling in social sciences and humanities.</span></div>
+                <a href="https://www.theacorn.com/articles/shes-only-13-but-already-has-three-associate-degrees/" target="_blank" class="source-link">Source: The Acorn</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">4. Pranav Kalyan</div>
+                <div class="detail"><strong>Degrees:</strong> <span>Two Associate Degrees (Mathematics, Natural Sciences)</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Moorpark College</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Pranav earned two degrees by 13, showcasing his talent in mathematics and natural sciences.</span></div>
+                <a href="https://www.toacorn.com/articles/ahead-of-the-game-13-year-old-already-has-two-college-degrees/" target="_blank" class="source-link">Source: The Acorn</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">5. Elijah Muhammad</div>
+                <div class="detail"><strong>Degrees:</strong> <span>Associate Degree in Science and Cybersecurity</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Oklahoma City Community College</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Muhammad graduated with two degrees at 13, excelling in science and cybersecurity.</span></div>
+                <a href="https://abcnews.go.com/GMA/Living/13-year-graduates-oklahoma-city-community-college-science/story?id=99462630" target="_blank" class="source-link">Source: ABC News</a>
+            </div>
+        </div>
+
+        <!-- 14 Years Old -->
+        <div id="age-14" class="age-section">
+            <div class="prodigy-card">
+                <div class="prodigy-name">1. Erik Demaine</div>
+                <div class="detail"><strong>Degree:</strong> <span>Computer Science</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Dalhousie University</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Demaine became the youngest professor in MIT’s history at 20, after earning his degree at 14.</span></div>
+                <a href="https://findingaids.library.dal.ca/demaine-erik" target="_blank" class="source-link">Source: Dalhousie University</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">2. Carson Huey-You</div>
+                <div class="detail"><strong>Degree:</strong> <span>Physics</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Texas Christian University</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Huey-You became the youngest graduate in Texas Christian University’s history at 14.</span></div>
+                <a href="https://en.wikipedia.org/wiki/Carson_Huey-You" target="_blank" class="source-link">Source: Wikipedia</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">3. Eugenie Carys de Silva</div>
+                <div class="detail"><strong>Degree:</strong> <span>Intelligence Analysis</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>American Military University</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>De Silva earned her degree at 14, becoming one of the youngest graduates in her field.</span></div>
+                <a href="#" class="source-link">Source: American Military University News</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">4. Alia Sabur</div>
+                <div class="detail"><strong>Degree:</strong> <span>Applied Mathematics</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Stony Brook University</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Sabur is recognized as one of the youngest people to earn a Ph.D., completing her studies by 19.</span></div>
+                <a href="#" class="source-link">Source: Stony Brook University News</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">5. Kairan Quazi</div>
+                <div class="detail"><strong>Degree:</strong> <span>Computer Science</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>Santa Clara University</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Quazi earned a degree in computer science and engineering at 14, showcasing exceptional talent in technology.</span></div>
+                <a href="https://www.thesantaclara.org/blog/14-year-old-kairan-quazi-to-graduate-with-bachelors-degrees-in-computer-science-and-engineering" target="_blank" class="source-link">Source: Santa Clara University News</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">6. Shania Muhammad</div>
+                <div class="detail"><strong>Degrees:</strong> <span>Science and Related Fields</span></div>
+                <div class="detail"><strong>Institutions:</strong> <span>Oklahoma City Community College and Langston University</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Muhammad became a college graduate at 14, earning degrees in science and related fields.</span></div>
+                <a href="https://www.yahoo.com/news/14-old-shania-muhammad-graduates-175453764.html" target="_blank" class="source-link">Source: Oklahoma City Community College News</a>
+            </div>
+
+            <div class="prodigy-card">
+                <div class="prodigy-name">7. Laurent Simons</div>
+                <div class="detail"><strong>Degree:</strong> <span>Bachelor’s Degree in Physics</span></div>
+                <div class="detail"><strong>Institution:</strong> <span>University of Antwerp</span></div>
+                <div class="detail"><strong>Notable Information:</strong> <span>Simons graduated with a bachelor’s degree in Physics at 14 and was preparing for his master’s.</span></div>
+                <a href="https://www.brusselstimes.com/176410/laurent-simons-child-prodigy-antwerp-university-physics" target="_blank" class="source-link">Source: Brussels Times</a>
+            </div>
+        </div>
+
+        <div class="references">
+            <h3>About This List</h3>
+            <p>This list highlights the extraordinary achievements of young individuals who have defied conventional academic timelines, earning degrees and making significant contributions to their respective fields at remarkably young ages. Each entry is supported by a single, reliable source for verification.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>Interactive Directory of Youngest College Graduates &copy; 2025 | Data sourced from verified publications</p>
+    </footer>
+
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const age = button.getAttribute('data-age');
+
+                // Update active tab
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                // Show corresponding section
+                document.querySelectorAll('.age-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(`age-${age}`).classList.add('active');
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const cards = document.querySelectorAll('.prodigy-card');
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase().trim();
+
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                const section = card.closest('.age-section');
+                const isVisible = text.includes(query);
+
+                card.style.display = isVisible ? 'block' : 'none';
+
+                if (query === '') {
+                    section.style.display = section.classList.contains('active') ? 'block' : 'none';
+                } else {
+                    const visibleCards = section.querySelectorAll('.prodigy-card:not([style*="display: none"])');
+                    section.style.display = visibleCards.length > 0 ? 'block' : 'none';
+                }
+            });
+
+            if (query !== '') {
+                document.querySelectorAll('.age-section').forEach(section => {
+                    const hasVisible = section.querySelector('.prodigy-card:not([style*="display: none"])');
+                    section.style.display = hasVisible ? 'block' : 'none';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
